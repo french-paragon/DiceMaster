@@ -2,14 +2,18 @@
 #include<climits>
 #include<vector>
 
+#include "dice.h"
 #include "diceset.h"
+#include "constantmodifier.h"
 #include "string_utility.h"
-#include "vector_utility.h"
 
 using namespace std;
 
 const std::string diceset::functions_names("max|min|mean");
-const boost::regex diceset::diceset_regex("^(( )*(" + functions_names + ")\\()?(( )*(([0-9]+d[0-9]+)|[a-z]*\\(?[ 0-9a-zA-Z+()]*\\)?)( )* [+])*( )*(([0-9]+d[0-9]+)|[a-z]*\\(?[ 0-9a-zA-Z+()]*\\)?)( )*(\\))?( )*$");
+const std::string diceset::general_shape("((" + functions_names + ")\\()?[ 0-9a-zA-Z+()]*\\)?");
+const std::string diceset::shape("( )*((" + diceset::functions_names + ")\\()?(" + dice::shape + "|" + diceset::general_shape + "|" + constantModifier::shape  + ")(( )*[+]( )*(" + dice::shape + "|" + diceset::general_shape + "|" + constantModifier::shape  + "))*( )*(\\))?( )*");
+
+const boost::regex diceset::diceset_regex("^" + diceset::shape + "$");
 const boost::regex diceset::functions_regex("^(" + functions_names + ")$");
 const boost::regex diceset::has_function_regex("^( )*(" + functions_names + ")\\([ 0-9a-zA-Z+()]*\\)( )*$");
 
@@ -51,6 +55,8 @@ diceset::diceset(string arg_v)
     unsigned int openPar = 0;
     unsigned int lastId = 0;
 
+    //cout << arg << endl;
+
     for(unsigned int i = 0; i<arg.size(); i++){
 
         if(arg[i] == '(')
@@ -64,9 +70,15 @@ diceset::diceset(string arg_v)
             std::string s = arg.substr(lastId, i-lastId);
             lastId = i+1;
 
+            //cout << s << endl;
+
             if(boost::regex_match(s.c_str(), dice::single_dice_regex)){
 
                 dices.push_back(new dice (s.c_str()));
+
+            } else if(boost::regex_match(s.c_str(), constantModifier::regexp)){
+
+                dices.push_back(new constantModifier(s));
 
             } else if(boost::regex_match(s.c_str(), diceset::diceset_regex)){
 
@@ -76,14 +88,20 @@ diceset::diceset(string arg_v)
         }
     }
 
-    std::string s = arg.substr(lastId, s.npos);
+    std::string s = arg.substr(lastId, arg.npos);
 
     if(boost::regex_match(s.c_str(), dice::single_dice_regex)){
 
         dices.push_back(new dice(s.c_str()));
 
+    } else if(boost::regex_match(s.c_str(), constantModifier::regexp)){
+
+        dices.push_back(new constantModifier(s));
+
     } else if(boost::regex_match(s.c_str(), diceset::diceset_regex)){
+
         dices.push_back(new diceset(s));
+
     }
 
     /*for(unsigned int i = 0; i<dices.size(); i++)
@@ -178,36 +196,36 @@ string diceset::represent() const{
     return out.str();
 }
 
-unsigned int diceset::Getresult() const{
+diceResultFormat diceset::Getresult() const{
 
         //std::cout << endl << funct << endl << endl;
 
         if(funct == "max"){
-            unsigned int m = 0;
+            diceResultFormat m = 0;
 
             for(vector<diceObject*>::const_iterator it = dices.begin(); it != dices.end(); ++it){
-                vector<unsigned int> r = (*it)->GetAllresult();
+                vector<diceResultFormat> r = (*it)->GetAllresult();
                 for(unsigned int i = 0; i<r.size(); i++)
                     if(r[i] > m) m = r[i];
             }
 
             return m;
         } else if(funct == "min"){
-            unsigned int m = UINT_MAX;
+            diceResultFormat m = UINT_MAX;
 
             for(vector<diceObject*>::const_iterator it = dices.begin(); it != dices.end(); ++it){
-                vector<unsigned int> r = (*it)->GetAllresult();
+                vector<diceResultFormat> r = (*it)->GetAllresult();
                 for(unsigned int i = 0; i<r.size(); i++)
                     if(r[i] < m) m = r[i];
             }
 
             return m;
         }else if(funct == "mean"){
-            unsigned int m = 0;
-            unsigned int s = 0;
+            diceResultFormat m = 0;
+            diceResultFormat s = 0;
 
             for(vector<diceObject*>::const_iterator it = dices.begin(); it != dices.end(); ++it){
-                vector<unsigned int> r = (*it)->GetAllresult();
+                vector<diceResultFormat> r = (*it)->GetAllresult();
                 for(unsigned int i = 0; i<r.size(); i++)
                     m += r[i];
                 s += r.size();
@@ -215,10 +233,10 @@ unsigned int diceset::Getresult() const{
 
             return m/s;
         }else{
-            unsigned int m = 0;
+            diceResultFormat m = 0;
 
             for(vector<diceObject*>::const_iterator it = dices.begin(); it != dices.end(); ++it){
-                vector<unsigned int> r = (*it)->GetAllresult();
+                vector<diceResultFormat> r = (*it)->GetAllresult();
                 for(unsigned int i = 0; i<r.size(); i++)
                     m += r[i];
             }
@@ -232,15 +250,15 @@ unsigned int diceset::Getresult() const{
 
 }
 
-vector<unsigned int> diceset::GetAllresult() const{
+vector<diceResultFormat> diceset::GetAllresult() const{
 
-        vector<unsigned int> results;
+        vector<diceResultFormat> results;
 
         if(funct == "max"){
-            unsigned int m = 0;
+            diceResultFormat m = 0;
 
             for(vector<diceObject*>::const_iterator it = dices.begin(); it != dices.end(); ++it){
-                vector<unsigned int> r = (*it)->GetAllresult();
+                vector<diceResultFormat> r = (*it)->GetAllresult();
                 for(unsigned int i = 0; i<r.size(); i++)
                     if(r[i] > m) m = r[i];
             }
@@ -249,10 +267,10 @@ vector<unsigned int> diceset::GetAllresult() const{
 
             return results;
         } else if(funct == "min"){
-            unsigned int m = UINT_MAX;
+            diceResultFormat m = UINT_MAX;
 
             for(vector<diceObject*>::const_iterator it = dices.begin(); it != dices.end(); ++it){
-                vector<unsigned int> r = (*it)->GetAllresult();
+                vector<diceResultFormat> r = (*it)->GetAllresult();
                 for(unsigned int i = 0; i<r.size(); i++)
                     if(r[i] < m) m = r[i];
             }
@@ -261,11 +279,11 @@ vector<unsigned int> diceset::GetAllresult() const{
 
             return results;
         }else if(funct == "mean"){
-            unsigned int m = 0;
-            unsigned int s = 0;
+            diceResultFormat m = 0;
+            diceResultFormat s = 0;
 
             for(vector<diceObject*>::const_iterator it = dices.begin(); it != dices.end(); ++it){
-                vector<unsigned int> r = (*it)->GetAllresult();
+                vector<diceResultFormat> r = (*it)->GetAllresult();
                 for(unsigned int i = 0; i<r.size(); i++)
                     m += r[i];
                 s += r.size();
@@ -275,10 +293,9 @@ vector<unsigned int> diceset::GetAllresult() const{
 
             return results;
         }else{
-            unsigned int m = 0;
 
             for(vector<diceObject*>::const_iterator it = dices.begin(); it != dices.end(); ++it){
-                vector<unsigned int> r = (*it)->GetAllresult();
+                vector<diceResultFormat> r = (*it)->GetAllresult();
                 for(unsigned int i = 0; i<r.size(); i++)
                     results.push_back(r[i]);
             }

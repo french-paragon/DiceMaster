@@ -15,6 +15,8 @@ class diceset : virtual public diceObject
     public:
 
         static const std::string functions_names;
+        static const std::string general_shape;
+        static const std::string shape;
         static const boost::regex diceset_regex;
         static const boost::regex functions_regex;
         static const boost::regex has_function_regex;
@@ -24,8 +26,8 @@ class diceset : virtual public diceObject
 
         virtual std::string represent() const;
         virtual std::string represent_wnr() const;
-        virtual unsigned int Getresult() const;
-        virtual std::vector<unsigned int> GetAllresult() const;
+        virtual diceResultFormat Getresult() const;
+        virtual std::vector<diceResultFormat> GetAllresult() const;
         virtual std::string GetDetailledResult() const;
 
         virtual void retrow();

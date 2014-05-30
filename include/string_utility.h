@@ -1,10 +1,12 @@
 #ifndef STRING_UTILITY_H_INCLUDED
 #define STRING_UTILITY_H_INCLUDED
 
+#include<string>
+
 #include "diceset.h"
 
-template<typename Ty>
-std::string to_string( Ty const& Value ) ;
+template<typename T>
+std::string to_string( T const& Value ) ;
 
 std::vector<std::string> explode (std::string input, std::string separator);
 

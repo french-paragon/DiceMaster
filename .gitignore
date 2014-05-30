@@ -24,3 +24,5 @@
 *.cbp
 *.depend
 *.layout
+bin/*
+*~

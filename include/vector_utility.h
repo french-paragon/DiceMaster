@@ -3,7 +3,7 @@
 
 #include <vector>
 
-template<class T>
-T sum(std::vector<T> v);
+template<class C>
+C sum(std::vector<C> v);
 
 #endif // VECTOR_UTILITY_H_INCLUDED

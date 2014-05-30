@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+typedef unsigned int diceResultFormat;
+
 class diceObject
 {
     public:
@@ -13,12 +15,20 @@ class diceObject
         virtual std::string represent() const {return " ";};
         virtual std::string represent_wnr() const {return " ";};
         virtual void retrow() { };
-        virtual unsigned int Getresult() const {return 0;};
-        virtual std::vector<unsigned int> GetAllresult() const {return {};};
+        virtual diceResultFormat Getresult() const {return 0;};
+        virtual std::vector<diceResultFormat> GetAllresult() const {return {};};
         virtual std::string GetDetailledResult() const {return " ";};
+
+        void setSign(int sgn){
+            sign = (sgn < 1) ? -1 : 1;
+        }
+
+        int getSign() const{ return (int) sign;}
 
     protected:
     private:
+
+    char sign;
 };
 
 #endif // DICEOBJECT_H

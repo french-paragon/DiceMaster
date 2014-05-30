@@ -2,12 +2,12 @@
 
 using namespace std;
 
-template<class T>
-T sum(vector<T> v){
+template<class C>
+C sum(vector<C> v){
 
-    T s(0);
+    C s(0);
 
-    for(typename vector<T>::iterator it = v.begin(); it != v.end(); ++it)
+    for(typename vector<C>::iterator it = v.begin(); it != v.end(); ++it)
         s += *it;
 
     return s;

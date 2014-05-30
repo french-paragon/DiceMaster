@@ -5,8 +5,8 @@
 #include "string_utility.h"
 #include "diceset.h"
 
-template<typename Ty>
-std::string to_string( Ty const& Value ) {
+template<class T>
+std::string to_string( T const& Value ) {
     // utiliser un flux de sortie pour créer la chaîne
     std::ostringstream oss;
     // écrire la valeur dans le flux
