@@ -50,7 +50,7 @@ dice::dice(const dice& other): nb(other.Getnb()), faces(other.Getfaces()), resul
 std::string dice::represent() const{
     std::ostringstream out;
 
-    out << nb << 'd' << faces;
+    out << nb << 'd' << faces << " = " << GetDetailledResult() << " = " << result;
 
     return out.str();
 }

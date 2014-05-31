@@ -22,7 +22,7 @@ string execute(string cmd){
         exit(0);
     else if(boost::regex_match(cmd.c_str(), dice::single_dice_regex)){
         dice d(cmd.c_str());
-        return to_string(d.Getnb()) + "d" + to_string(d.Getfaces()) + " : " + to_string(d.Getresult());
+        return d.represent();
     }
     else if(boost::regex_match(cmd.c_str(), diceset::diceset_regex)){
         diceset d(cmd);
@@ -46,7 +46,7 @@ int main()
         cout << prompt << ">> ";
         getline(cin, cmd);
 
-        cout << execute(cmd) << endl;
+        cout << endl << execute(cmd) << endl << endl;
 
     }
 }
