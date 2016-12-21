@@ -4,7 +4,7 @@
 
 #include <string>
 #include <vector>
-#include <boost/regex.hpp>
+#include <regex>
 
 #include "diceobject.h"
 #include "string_utility.h"
@@ -14,7 +14,7 @@ class dice :  virtual public  diceObject
     public:
 
         static const std::string shape;
-        static const boost::regex single_dice_regex;
+		static const std::regex single_dice_regex;
 
         dice(unsigned int nb_f = 6, unsigned int nbd = 1);
         dice(const char* d_m);

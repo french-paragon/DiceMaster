@@ -4,7 +4,7 @@
 #include <sstream>
 
 const std::string constantModifier::shape("( )*[+]?( )*[0-9]+( )*");
-const boost::regex constantModifier::regexp ("^" + constantModifier::shape + "$");
+const std::regex constantModifier::regexp ("^" + constantModifier::shape + "$");
 
 constantModifier::constantModifier(std::string dats)
 {

@@ -7,7 +7,7 @@
 #include "string_utility.h"
 
 const std::string dice::shape("( )*[+-]?( )*([0-9]+d[0-9]+)( )*");
-const boost::regex dice::single_dice_regex("^" + dice::shape + "$");
+const std::regex dice::single_dice_regex("^" + dice::shape + "$");
 
 dice::dice(unsigned int nb_f, unsigned int nbd): nb(nbd), faces(nb_f)
 {

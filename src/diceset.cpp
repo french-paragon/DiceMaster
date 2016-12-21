@@ -13,16 +13,16 @@ const std::string diceset::functions_names("max|min|mean");
 const std::string diceset::general_shape("((" + functions_names + ")\\()?[ 0-9a-zA-Z+()]*\\)?");
 const std::string diceset::shape("( )*((" + diceset::functions_names + ")\\()?(" + dice::shape + "|" + diceset::general_shape + "|" + constantModifier::shape  + ")(( )*[+]( )*(" + dice::shape + "|" + diceset::general_shape + "|" + constantModifier::shape  + "))*( )*(\\))?( )*");
 
-const boost::regex diceset::diceset_regex("^" + diceset::shape + "$");
-const boost::regex diceset::functions_regex("^(" + functions_names + ")$");
-const boost::regex diceset::has_function_regex("^( )*(" + functions_names + ")\\([ 0-9a-zA-Z+()]*\\)( )*$");
+const std::regex diceset::diceset_regex("^" + diceset::shape + "$");
+const std::regex diceset::functions_regex("^(" + functions_names + ")$");
+const std::regex diceset::has_function_regex("^( )*(" + functions_names + ")\\([ 0-9a-zA-Z+()]*\\)( )*$");
 
 diceset::diceset(string arg_v)
 {
 
     string arg = arg_v;
 
-    if(boost::regex_match(arg.c_str(), has_function_regex)){
+	if(std::regex_match(arg.c_str(), has_function_regex)){
 
         bool ffplace = true;
         bool oPar = true;
@@ -67,20 +67,20 @@ diceset::diceset(string arg_v)
 
             //cout << lastId << ' ' << i << endl;
 
-            std::string s = arg.substr(lastId, i-lastId);
+			string s = arg.substr(lastId, i-lastId);
             lastId = i+1;
 
             //cout << s << endl;
 
-            if(boost::regex_match(s.c_str(), dice::single_dice_regex)){
+			if(regex_match(s, dice::single_dice_regex)){
 
                 dices.push_back(new dice (s.c_str()));
 
-            } else if(boost::regex_match(s.c_str(), constantModifier::regexp)){
+			} else if(regex_match(s, constantModifier::regexp)){
 
                 dices.push_back(new constantModifier(s));
 
-            } else if(boost::regex_match(s.c_str(), diceset::diceset_regex)){
+			} else if(regex_match(s, diceset::diceset_regex)){
 
                 dices.push_back(new diceset(s));
             }
@@ -90,15 +90,15 @@ diceset::diceset(string arg_v)
 
     std::string s = arg.substr(lastId, arg.npos);
 
-    if(boost::regex_match(s.c_str(), dice::single_dice_regex)){
+	if(regex_match(s, dice::single_dice_regex)){
 
         dices.push_back(new dice(s.c_str()));
 
-    } else if(boost::regex_match(s.c_str(), constantModifier::regexp)){
+	} else if(regex_match(s, constantModifier::regexp)){
 
         dices.push_back(new constantModifier(s));
 
-    } else if(boost::regex_match(s.c_str(), diceset::diceset_regex)){
+	} else if(regex_match(s.c_str(), diceset::diceset_regex)){
 
         dices.push_back(new diceset(s));
 
@@ -120,7 +120,7 @@ string diceset::represent_wnr() const{
     ostringstream out;
     bool fct = false;
 
-    if(boost::regex_match(funct.c_str(), functions_regex))
+	if(std::regex_match(funct.c_str(), functions_regex))
         fct = true;
 
     if(fct)
@@ -146,7 +146,7 @@ string diceset::GetDetailledResult() const{
     ostringstream out;
     bool fct = false;
 
-    if(boost::regex_match(funct.c_str(), functions_regex))
+	if(std::regex_match(funct.c_str(), functions_regex))
         fct = true;
 
     if(fct)
@@ -175,7 +175,7 @@ string diceset::represent() const{
 
     out << " = ";
 
-    if(boost::regex_match(funct.c_str(), functions_regex))
+	if(std::regex_match(funct.c_str(), functions_regex))
         fct = true;
 
     if(fct)
@@ -245,7 +245,7 @@ diceResultFormat diceset::Getresult() const{
         }
 
 
-        return 124556765432;
+		return 0;
 
 
 }

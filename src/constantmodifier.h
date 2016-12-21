@@ -2,7 +2,7 @@
 #define CONSTANTMODIFIER_H
 
 #include <string>
-#include <boost/regex.hpp>
+#include <regex>
 
 #include "diceobject.h"
 
@@ -12,7 +12,7 @@ class constantModifier : virtual public diceObject
     public:
 
         static const std::string shape;
-        static const boost::regex regexp;
+		static const std::regex regexp;
 
         constantModifier(std::string dats);
         virtual ~constantModifier();

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <boost/regex.hpp>
+#include <regex>
 
 #include "dice.h"
 #include "diceobject.h"
@@ -17,9 +17,9 @@ class diceset : virtual public diceObject
         static const std::string functions_names;
         static const std::string general_shape;
         static const std::string shape;
-        static const boost::regex diceset_regex;
-        static const boost::regex functions_regex;
-        static const boost::regex has_function_regex;
+		static const std::regex diceset_regex;
+		static const std::regex functions_regex;
+		static const std::regex has_function_regex;
 
         diceset(std::string arg);
         ~diceset();
