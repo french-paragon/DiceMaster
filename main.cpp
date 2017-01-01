@@ -1,6 +1,7 @@
 #include <iostream>
-#include <string>
-#include <regex>
+#include <QCoreApplication>
+
+#include "consolewatcher.h"
 
 #include "dice.h"
 #include "diceset.h"
@@ -8,45 +9,21 @@
 
 using namespace std;
 
-const string exit_cmd("exit");
-const regex exit_regex("( )*exit\\(\\)( )*");
-
-
-bool isExit(string cmd){
-	return regex_match(cmd, exit_regex);
+void treatDiceSet(diceset set){
+	cout << set << endl;
 }
 
-string execute(string cmd){
-
-    if(isExit(cmd))
-        exit(0);
-	else if(regex_match(cmd.c_str(), dice::single_dice_regex)){
-        dice d(cmd.c_str());
-        return d.represent();
-    }
-	else if(regex_match(cmd.c_str(), diceset::diceset_regex)){
-        diceset d(cmd);
-
-        return d.represent();
-    }
-
-    return "Votre commande n'a pas été reconnue!";
-
-}
-
-int main()
+int main(int argc, char** argv)
 {
-    srand(time(nullptr));
+	srand(time(nullptr)); //seed rand.
 
-    string cmd;
-    string prompt = "";
+	QCoreApplication app(argc, argv);
+	ConsoleWatcher watcher(&app);
 
-    while(1){
+	QObject::connect(&watcher, &ConsoleWatcher::exitTriggered, &app, &QCoreApplication::exit);
+	QObject::connect(&watcher, &ConsoleWatcher::singleDiceExpr, &treatDiceSet);
 
-        cout << prompt << ">> ";
-        getline(cin, cmd);
+	watcher.run();
 
-        cout << endl << execute(cmd) << endl << endl;
-
-    }
+	return app.exec();
 }

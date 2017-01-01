@@ -5,13 +5,29 @@ project(DiceMaster)
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
 include_directories(src)
+include_directories(src/command_line_interface)
 set(PROG_NAME diceMaster)
 set(LIB_NAME libMaster)
 
-set(LIB_SRC string_utility.cpp vector_utility.cpp src/constantmodifier.cpp src/dice.cpp src/diceobject.cpp src/diceset.cpp)
+#Qt
+find_package(Qt5Core)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+
+set(LIB_SRC string_utility.cpp
+            vector_utility.cpp
+            src/constantmodifier.cpp
+            src/dice.cpp
+            src/diceobject.cpp
+            src/diceset.cpp
+            src/command_line_interface/consolewatcher.cpp)
 set(PROG_SRC main.cpp)
 
 add_library(${LIB_NAME} STATIC ${LIB_SRC})
+QT5_USE_MODULES(${LIB_NAME} Core)
 
 add_executable(${PROG_NAME} ${PROG_SRC})
 target_link_libraries(${PROG_NAME} ${LIB_NAME})
+QT5_USE_MODULES(${PROG_NAME} Core)
