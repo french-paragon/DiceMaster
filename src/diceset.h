@@ -38,6 +38,6 @@ class diceset : virtual public diceObject
         std::vector<diceObject*> dices;
 };
 
-std::ostream& operator<<(std::ostream& out, diceset ds);
+std::ostream& operator<<(std::ostream& out, diceset const& ds);
 
 #endif // DICESET_H
