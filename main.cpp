@@ -1,7 +1,7 @@
 #include <iostream>
 #include <QCoreApplication>
 
-#include "consolewatcher.h"
+#include "consoleinterface.h"
 
 #include "dice.h"
 #include "diceset.h"
@@ -9,21 +9,16 @@
 
 using namespace std;
 
-void treatDiceSet(diceset set){
-	cout << set << endl;
-}
-
 int main(int argc, char** argv)
 {
 	srand(time(nullptr)); //seed rand.
 
 	QCoreApplication app(argc, argv);
-	ConsoleWatcher watcher(&app);
+	ConsoleInterface interface(&app);
 
-	QObject::connect(&watcher, &ConsoleWatcher::exitTriggered, &app, &QCoreApplication::exit);
-	QObject::connect(&watcher, &ConsoleWatcher::singleDiceExpr, &treatDiceSet);
+	QObject::connect(&interface, &ConsoleInterface::exitTriggered, &app, &QCoreApplication::exit);
 
-	watcher.run();
+	interface.run();
 
 	return app.exec();
 }

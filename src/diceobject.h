@@ -15,7 +15,7 @@ class diceObject
 		virtual std::string represent() const {return " ";}
 		virtual std::string represent_wnr() const {return " ";}
 		virtual void retrow() { }
-		virtual diceResultFormat Getresult() const {return 0;};
+		virtual diceResultFormat Getresult() const {return 0;}
 		virtual std::vector<diceResultFormat> GetAllresult() const {return {};}
 		virtual std::string GetDetailledResult() const {return " ";}
 

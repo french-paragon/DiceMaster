@@ -25,6 +25,8 @@ signals:
 	void exitTriggered(int status = 0);
 	void singleDiceExpr(diceset set);
 	void unregognizedCmd(std::string cmd);
+	void registerDiceExpr(diceset set, QString name);
+	void triggerDiceExpr(QString name);
 
 public slots:
 
